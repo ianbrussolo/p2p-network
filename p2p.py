@@ -245,8 +245,9 @@ class PeerNode:
             elif choice == '1':
                 print("Escolha o vizinho:")
                 self.list_neighbors()
-                neighbor_choice = input()
-                self.send_hello(self, neighbor_choice)
+                neighbor_choice = int(input())
+                neighbor = self.neighbors[neighbor_choice]
+                self.send_hello(neighbor)
             elif choice == '2':
                 self.initiate_search('FL')
             elif choice == '3':
@@ -263,8 +264,8 @@ class PeerNode:
 
     def list_neighbors(self):
         print("Lista de vizinhos:")
-        for neighbor in self.neighbors:
-            print(neighbor)
+        for count, neighbor in enumerate(self.neighbors):
+            print(f"[{count}] {neighbor}")
 
     def send_hello_to_all(self):
         for neighbor in self.neighbors:

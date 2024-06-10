@@ -198,8 +198,37 @@ class PeerNode:
         self.send_message(new_message, next_neighbor)
 
     def process_random_walk_message(self, parts, client_socket):
-        # Aqui você implementaria a lógica específica para o random walk
-        pass
+        origin = parts[0]
+        seq_no = int(parts[1])
+        ttl = int(parts[2])
+        last_hop_port = int(parts[5])
+        key = parts[6]
+        hop_count = int(parts[7])
+        msg_id = (origin, seq_no)
+
+        if key in self.key_value_store:
+            value = self.key_value_store[key]
+            response = f"{self.address}:{self.port} {self.sequence_number} {self.ttl_default} VAL RW {key} {value} {hop_count}\n"
+            self.sequence_number += 1
+            self.send_message(response, origin)
+            print(f"Valor encontrado! Chave: {key} valor: {value}")
+            return
+
+        ttl -= 1
+        if ttl == 0:
+            print("TTL igual a zero, descartando mensagem")
+            return
+
+        hop_count += 1
+        new_message = f"{origin} {seq_no} {ttl} SEARCH RW {self.port} {key} {hop_count}\n"
+        neighbors_to_choose = [neighbor for neighbor in self.neighbors if int(neighbor.split(':')[1]) != last_hop_port]
+
+        if neighbors_to_choose:
+            next_neighbor = random.choice(neighbors_to_choose)
+        else:
+            next_neighbor = f"{self.address}:{last_hop_port}"
+
+        self.send_message(new_message, next_neighbor)
 
     def send_hello(self, neighbor):
         try:
@@ -275,8 +304,12 @@ class PeerNode:
         key = input("Digite a chave a ser buscada\n")
         message = f"{self.address}:{self.port} {self.sequence_number} {self.ttl_default} SEARCH {mode} {self.port} {key} 0\n"
         self.sequence_number += 1
-        for neighbor in self.neighbors:
+        if mode == 'RW':
+            neighbor = random.choice(self.neighbors)
             self.send_message(message, neighbor)
+        else:
+            for neighbor in self.neighbors:
+                self.send_message(message, neighbor)
 
     def show_statistics(self):
         print("Estatisticas")

@@ -3,6 +3,7 @@ import sys
 import threading
 import random
 import statistics
+import os
 
 class PeerNode:
     def __init__(self, address, port, neighbors_file=None, key_value_file=None):
@@ -47,7 +48,7 @@ class PeerNode:
     def start_server(self):
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind((self.address, self.port))
-        self.server_socket.listen(5)
+        self.server_socket.listen()
         print(f"Servidor iniciado em {self.address}:{self.port}")
 
         threading.Thread(target=self.accept_connections).start()
@@ -170,7 +171,7 @@ class PeerNode:
                 'vizinhos_candidatos': self.neighbors[:],
                 'vizinho_ativo': None
             }
-        
+
         info = self.depth_search_info[msg_id]
 
         if f"{self.address}:{last_hop_port}" in info['vizinhos_candidatos']:
@@ -259,15 +260,16 @@ class PeerNode:
 
     def show_menu(self):
         while True:
-            print("Escolha o comando")
-            print("[0] Listar vizinhos")
-            print("[1] HELLO")
-            print("[2] SEARCH (flooding)")
-            print("[3] SEARCH (random walk)")
-            print("[4] SEARCH (busca em profundidade)")
-            print("[5] Estatisticas")
-            print("[6] Alterar valor padrao de TTL")
-            print("[9] Sair")
+            if not os.getenv("DEBUG"):
+                print("Escolha o comando")
+                print("     [0] Listar vizinhos")
+                print("     [1] HELLO")
+                print("     [2] SEARCH (flooding)")
+                print("     [3] SEARCH (random walk)")
+                print("     [4] SEARCH (busca em profundidade)")
+                print("     [5] Estatisticas")
+                print("     [6] Alterar valor padrao de TTL")
+                print("     [9] Sair")
             choice = input()
             if choice == '0':
                 self.list_neighbors()
@@ -355,13 +357,12 @@ class PeerNode:
         sys.exit(0)
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Uso: python3 peer_node.py <IP> <PORT> [<NEIGHBORS_FILE>] [<KEY_VALUE_FILE>]")
+    if len(sys.argv) < 2:
+        print("Uso: python3 peer_node.py <IP>:<PORT> [<NEIGHBORS_FILE>] [<KEY_VALUE_FILE>]")
         sys.exit(1)
 
-    address = sys.argv[1]
-    port = sys.argv[2]
-    neighbors_file = sys.argv[3] if len(sys.argv) > 3 else None
-    key_value_file = sys.argv[4] if len(sys.argv) > 4 else None
+    address, port = sys.argv[1].split(":")
+    neighbors_file = sys.argv[2] if len(sys.argv) > 2 else None
+    key_value_file = sys.argv[3] if len(sys.argv) > 3 else None
 
     PeerNode(address, port, neighbors_file, key_value_file)

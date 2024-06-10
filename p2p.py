@@ -292,6 +292,8 @@ class PeerNode:
             elif choice == '9':
                 self.exit_network()
                 break
+            else:
+                print("Erro: Opcao invalida")
 
     def list_neighbors(self):
         print("Lista de vizinhos:")

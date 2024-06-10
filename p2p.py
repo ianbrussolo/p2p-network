@@ -34,9 +34,12 @@ class PeerNode:
         with open(neighbors_file, 'r') as file:
             for line in file:
                 neighbor = line.strip()
-                self.neighbors.append(neighbor)
                 print(f"Tentando adicionar vizinho {neighbor}")
-                self.send_hello(neighbor)
+                if self.send_hello(neighbor):
+                    self.neighbors.append(neighbor)
+                    print(f"Vizinho {neighbor} adicionado com sucesso")
+                else:
+                    print(f"Erro ao adicionar vizinho {neighbor}")
 
     def load_key_values(self, key_value_file):
         with open(key_value_file, 'r') as file:
@@ -242,10 +245,13 @@ class PeerNode:
                 response = sock.recv(1024).decode().strip()
                 if response == "HELLO_OK":
                     print(f"Envio feito com sucesso: {message.strip()}")
+                    return True
                 else:
                     print(f"Erro ao enviar mensagem: {message.strip()}")
+                    return False
         except Exception as e:
             print(f"Erro ao conectar-se ao vizinho {neighbor}: {e}")
+            return False
 
     def send_message(self, message, neighbor):
         try:

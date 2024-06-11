@@ -45,4 +45,71 @@ As estatísticas sobre o número de mensagens vistas e os saltos necessários pa
 ![send hello](images/send_hello.png) <br> ![load neighbor](images/load_neighbors.png) <br>
 <b>Mensagens repetidas</b>  detectadas e ignoradas para evitar loops infinitos ou sobrecarga desnecessária na rede.<br>
 
+## Testes
+Testes realizados com os arquivos de topologia de árvore binária disponibilizados juntos com as instruções de construção do sistema.
+Você pode encontrar essas topologias na pasta infra.
+
+```bash
+# Terminal 1
+❯ python3 p2p.py 127.0.0.1:5001 infra/topologia_arvore_binaria/1.txt
+Tentando adicionar vizinho 127.0.0.1:5002
+Erro ao conectar-se ao vizinho 127.0.0.1:5002: [Errno 111] Connection refused
+Erro ao adicionar vizinho 127.0.0.1:5002
+Tentando adicionar vizinho 127.0.0.1:5003
+Erro ao conectar-se ao vizinho 127.0.0.1:5003: [Errno 111] Connection refused
+Erro ao adicionar vizinho 127.0.0.1:5003
+Servidor iniciado em 127.0.0.1:5001
+Escolha o comando
+     [0] Listar vizinhos
+     [1] HELLO
+     [2] SEARCH (flooding)
+     [3] SEARCH (random walk)
+     [4] SEARCH (busca em profundidade)
+     [5] Estatisticas
+     [6] Alterar valor padrao de TTL
+     [9] Sair
+# Terminal 2
+❯ python3 p2p.py 127.0.0.1:5002 infra/topologia_arvore_binaria/2.txt
+Tentando adicionar vizinho 127.0.0.1:5001
+Encaminhando mensagem 127.0.0.1:5002 0 1 HELLO para 127.0.0.1:5001
+Envio feito com sucesso: 127.0.0.1:5002 0 1 HELLO
+Vizinho 127.0.0.1:5001 adicionado com sucesso
+Tentando adicionar vizinho 127.0.0.1:5004
+Erro ao conectar-se ao vizinho 127.0.0.1:5004: [Errno 111] Connection refused
+Erro ao adicionar vizinho 127.0.0.1:5004
+Tentando adicionar vizinho 127.0.0.1:5005
+Erro ao conectar-se ao vizinho 127.0.0.1:5005: [Errno 111] Connection refused
+Erro ao adicionar vizinho 127.0.0.1:5005
+Servidor iniciado em 127.0.0.1:5002
+Escolha o comando
+     [0] Listar vizinhos
+     [1] HELLO
+     [2] SEARCH (flooding)
+     [3] SEARCH (random walk)
+     [4] SEARCH (busca em profundidade)
+     [5] Estatisticas
+     [6] Alterar valor padrao de TTL
+     [9] Sair
+# Terminal 1
+Recebido: 127.0.0.1:5002 0 1 HELLO
+Adicionando vizinho na tabela: 127.0.0.1:5002
+```
+
+Aqui vemos a lógica do `HELLO` em ação, ao iniciar o Nó 1 não temos nenhum vizinho online, mas assim que também iniciamos o 2, podemos observar no terminal 1 que o nó 2 é adicionado a tabela de nós vizinhos.
+
+```bash
+# Terminal 1
+9 # operacao para sair da rede
+Saindo...
+Encaminhando mensagem 127.0.0.1:5001 0 1 BYE para 127.0.0.1:5002
+Envio feito com sucesso: 127.0.0.1:5001 0 1 BYE
+# Terminal 2
+Recebido: 127.0.0.1:5001 0 1 BYE
+Mensagem recebida: 127.0.0.1:5001 0 1 BYE
+Removendo vizinho da tabela: 127.0.0.1:5001
+```
+
+Ao encerrar o nó 1, observamos como o mesmo envia uma mensagem de `BYE` para todos seus vizinhos e o nó 2 ao receber a informação remove o 'peer' da sua lista de nós.
+
 ## Instruções (como rodar)
+

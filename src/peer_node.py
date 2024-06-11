@@ -49,7 +49,7 @@ class PeerNode:
 
     def add_neighbor(self, neighbor):
         self.neighbors.append(neighbor)
-        print(f"Tentando adicionar vizinho {neighbor}")
+        main.log(f"Tentando adicionar vizinho {neighbor}")
         self.message_handler.send_hello(neighbor)
 
     def add_key_value(self, key_value):
@@ -92,9 +92,9 @@ class PeerNode:
                 break
 
     def list_neighbors(self):
-        print("Lista de vizinhos:")
+        log("Lista de vizinhos:")
         for neighbor in self.neighbors:
-            print(neighbor)
+            log(neighbor)
 
     def initiate_search(self, strategy):
         key = input("Digite a chave a ser buscada\n")
@@ -102,7 +102,7 @@ class PeerNode:
         self.search_context.search(key)
 
     def exit_network(self):
-        print("Saindo...")
+        log("Saindo...")
         for neighbor in self.neighbors:
             message = f"{self.address}:{self.port} {self.sequence_number} 1 BYE\n"
             self.sequence_number += 1

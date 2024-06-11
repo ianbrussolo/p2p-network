@@ -18,18 +18,18 @@ class MessageHandler:
             with socket.create_connection(
                 (neighbor_address, int(neighbor_port))
             ) as sock:
-                print(f"Encaminhando mensagem {message.strip()} para {neighbor}")
+                log(f"Encaminhando mensagem {message.strip()} para {neighbor}")
                 sock.sendall(message.encode())
                 response = sock.recv(1024).decode().strip()
                 if response == "HELLO_OK":
-                    print(f"Envio feito com sucesso: {message.strip()}")
+                    log(f"Envio feito com sucesso: {message.strip()}")
                 else:
-                    print(f"Erro ao enviar mensagem: {message.strip()}")
+                    log(f"Erro ao enviar mensagem: {message.strip()}")
         except Exception as e:
-            print(f"Erro ao conectar-se ao vizinho {neighbor}: {e}")
+            log(f"Erro ao conectar-se ao vizinho {neighbor}: {e}")
 
     def process_message(self, message, client_socket):
-        print(f"Recebido: {message}")
+        log(f"Recebido: {message}")
         parts = message.split()
         origin = parts[0]
         seq_no = int(parts[1])
@@ -42,16 +42,16 @@ class MessageHandler:
             self.handle_search(parts, client_socket)
         elif operation == "VAL":
             self.peer_node.stats.record_hop(parts[4], int(parts[7]))
-            print(f"Valor encontrado! Chave: {parts[5]} valor: {parts[6]}")
+            log(f"Valor encontrado! Chave: {parts[5]} valor: {parts[6]}")
         elif operation == "BYE":
             self.handle_bye(origin)
 
     def handle_hello(self, origin, client_socket):
         if origin not in self.peer_node.neighbors:
             self.peer_node.neighbors.append(origin)
-            print(f"Adicionando vizinho na tabela: {origin}")
+            log(f"Adicionando vizinho na tabela: {origin}")
         else:
-            print(f"Vizinho já está na tabela: {origin}")
+            log(f"Vizinho já está na tabela: {origin}")
         client_socket.sendall(b"HELLO_OK\n")
 
     def handle_search(self, parts, client_socket):
@@ -68,7 +68,7 @@ class MessageHandler:
         self.peer_node.search_context.search(key, parts, client_socket)
 
     def handle_bye(self, origin):
-        print(f"Mensagem recebida: BYE de {origin}")
+        log(f"Mensagem recebida: BYE de {origin}")
         if origin in self.peer_node.neighbors:
             self.peer_node.neighbors.remove(origin)
-            print(f"Removendo vizinho da tabela: {origin}")
+            log(f"Removendo vizinho da tabela: {origin}")

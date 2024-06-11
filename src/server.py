@@ -14,7 +14,7 @@ class PeerServer:
     def start(self):
         self.server_socket.bind((self.address, self.port))
         self.server_socket.listen(5)
-        print(f"Servidor iniciado em {self.address}:{self.port}")
+        log(f"Servidor iniciado em {self.address}:{self.port}")
 
         threading.Thread(target=self.accept_connections).start()
 

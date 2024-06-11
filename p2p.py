@@ -298,6 +298,8 @@ class PeerNode:
             elif choice == '9':
                 self.exit_network()
                 break
+            elif choice == "listen":
+                break
             else:
                 print("Erro: Opcao invalida")
 

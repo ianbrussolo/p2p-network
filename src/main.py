@@ -12,4 +12,4 @@ if __name__ == "__main__":
     neighbors_file = sys.argv[2] if len(sys.argv) > 2 else None
     key_value_file = sys.argv[3] if len(sys.argv) > 3 else None
 
-    PeerNode(address, port, neighbors_file, key_value_file)
+    PeerNode(address, port, neighbors_file, key_value_file, start_server=True)

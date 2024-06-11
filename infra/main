@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+
+import os
+import yaml
+
+
+topologies = [
+    d for d in os.listdir(".") if os.path.isdir(d) and d.startswith("topologia")
+]
+
+for topology in topologies:
+    services = {}
+    files = os.listdir(topology)
+    for file in files:
+        if file == "topologia.txt":
+            continue
+
+        if file.endswith(".txt"):
+            number = file.split(".")[0]
+            port = 5000 + int(number)
+            service_name = f"peer_{number}"
+
+            services[service_name] = {
+                "build": "../../",
+                "command": [
+                    "python",
+                    "p2p.py",
+                    f"127.0.0.1:{port}",
+                    f"infra/{topology}/{file}",
+                ],
+            }
+
+    # Gerar arquivo docker-compose.yml
+    compose_content = {"version": "3", "services": services}
+
+    with open(f"{topology}/docker-compose.yml", "w") as f:
+        yaml.dump(compose_content, f, default_flow_style=False)
+
+    print(f"Arquivo {topology}/docker-compose.yml gerado com sucesso.")

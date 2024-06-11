@@ -1,0 +1,51 @@
+services:
+  peer_1:
+    build: ../../
+    command:
+    - python
+    - p2p.py
+    - 127.0.0.1:5001
+    - infra/topologia_arvore_binaria/1.txt
+  peer_2:
+    build: ../../
+    command:
+    - python
+    - p2p.py
+    - 127.0.0.1:5002
+    - infra/topologia_arvore_binaria/2.txt
+  peer_3:
+    build: ../../
+    command:
+    - python
+    - p2p.py
+    - 127.0.0.1:5003
+    - infra/topologia_arvore_binaria/3.txt
+  peer_4:
+    build: ../../
+    command:
+    - python
+    - p2p.py
+    - 127.0.0.1:5004
+    - infra/topologia_arvore_binaria/4.txt
+  peer_5:
+    build: ../../
+    command:
+    - python
+    - p2p.py
+    - 127.0.0.1:5005
+    - infra/topologia_arvore_binaria/5.txt
+  peer_6:
+    build: ../../
+    command:
+    - python
+    - p2p.py
+    - 127.0.0.1:5006
+    - infra/topologia_arvore_binaria/6.txt
+  peer_7:
+    build: ../../
+    command:
+    - python
+    - p2p.py
+    - 127.0.0.1:5007
+    - infra/topologia_arvore_binaria/7.txt
+version: '3'

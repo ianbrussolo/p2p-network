@@ -11,7 +11,14 @@ from statistics import Statistics
 
 
 class PeerNode:
-    def __init__(self, address, port, neighbors_file=None, key_value_file=None):
+    def __init__(
+        self,
+        address,
+        port,
+        neighbors_file=None,
+        key_value_file=None,
+        start_server=False,
+    ):
         self.address = address
         self.port = int(port)
         self.neighbors = []
@@ -31,8 +38,9 @@ class PeerNode:
         self.message_handler = MessageHandler(self)
         self.search_context = SearchStrategyContext()
 
-        self.start_server()
-        self.show_menu()
+        if start_server:
+            self.start_server()
+            self.show_menu()
 
     def load_file(self, file_path, handler):
         with open(file_path, "r") as file:
@@ -100,4 +108,6 @@ class PeerNode:
             self.sequence_number += 1
             self.message_handler.send_message(message, neighbor)
         self.server.close()
+        if hasattr(sys, "_called_from_test"):
+            return
         sys.exit(0)

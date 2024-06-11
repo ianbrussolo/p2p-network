@@ -1,0 +1,23 @@
+services:
+  peer_1:
+    build: ../../
+    command:
+    - python
+    - p2p.py
+    - 127.0.0.1:5001
+    - infra/topologia_linha/1.txt
+  peer_2:
+    build: ../../
+    command:
+    - python
+    - p2p.py
+    - 127.0.0.1:5002
+    - infra/topologia_linha/2.txt
+  peer_3:
+    build: ../../
+    command:
+    - python
+    - p2p.py
+    - 127.0.0.1:5003
+    - infra/topologia_linha/3.txt
+version: '3'

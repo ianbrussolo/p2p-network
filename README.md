@@ -1,4 +1,7 @@
-# Sistema de busca não estruturado p2p
+# Sistema de busca não estruturado peer 2 peer
+
+##Ian Tiozzo Brussolo 13781883
+##Matheus Rocha Santos 11885102
 
 ## Detalhes de implementação
 

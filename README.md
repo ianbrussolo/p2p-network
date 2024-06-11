@@ -1,4 +1,4 @@
-# Sistema de busca não estruturado peer 2 peer
+# Relatório sistema de busca não estruturado peer 2 peer
 
 Ian Tiozzo Brussolo 13781883 <br>
 Matheus Rocha Santos 11885102 <br>
